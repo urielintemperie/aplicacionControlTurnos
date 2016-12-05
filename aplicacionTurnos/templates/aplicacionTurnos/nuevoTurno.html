@@ -1,0 +1,72 @@
+{% extends 'aplicacionTurnos/baseABM.html' %}
+{% load widget_tweaks %}
+{% load bootstrap %}
+
+        {% block ABM %}
+            <h2>Turno</h2>
+            <form method="POST">
+              {% csrf_token %}
+              {% form_input form.medico %}
+              {% form_input form.paciente %}
+              {% form_input form.horario %}
+              {% form_input form.tratamiento %}
+              {{ form.estado }}
+              <div class="pull-right">
+                <input type="submit" class="btn btn-success" value="Guardar"/>
+              </div>
+            </form>
+            {% endblock%}
+
+    {% block tablas %}
+    <div id='tablaArriba'>
+      <table class="table table-hover">
+        <font size=5><p align=center>Turnos</p></font>
+        <tr>
+          <td class="warning">Medico</td>
+          <td class="warning">Paciente</td>
+          <td class="warning">Horario</td>
+          <td class="warning">Tratamiento</td>
+          <td class="warning">Estado</td>
+        </tr>
+      </table>
+    </div>
+
+    <div id='tablaAbajo'>
+      {% for turno in turnos %}
+      <table class="table table-hover">
+      <tr class="{{turno.estado}}">
+          <td>{{turno.medico.nombre}} {{turno.medico.apellido}}</td>
+          <td>{{turno.paciente.nombre}} {{turno.paciente.apellido}}</td>
+          <td>{{turno.horario.horaInicio}}</td>
+          <td>{{turno.tratamiento.nombre}}</td>
+          <td>{{turno.estado}}</td>
+          <td><a href="{% url 'aplicacionTurnos.views.editarTurno' pk=turno.pk %}"><i class="fa fa-pencil fa-2x" aria-hidden="true"></i></a></td>
+          <td><a href="javascript:toggleMVM()"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
+        </tr>
+      </table>
+      {% endfor %}
+    </div>
+    <!--
+        <table class="table table-hover">
+          <font size=5><p align=center>Turnos</p></font>
+            <tr>
+                <td class="warning">Medico</td>
+                <td class="warning">Paciente</td>
+                <td class="warning">Horario</td>
+                <td class="warning">Tratamiento</td>
+                <td class="warning">Estado</td>
+            </tr>
+            {% for turno in turnos %}
+                <tr>
+                    <td class="success">{{turno.medico}}</td>
+                    <td class="success">{{turno.paciente}}</td>
+                    <td class="success">{{turno.horario}}</td>
+                    <td class="success">{{turno.tratamiento}}</td>
+                    <td class="success">{{turno.estado}}
+                    <td class="success"><a href="{% url 'aplicacionTurnos.views.editarTurno' pk=turno.pk %}"><i class="fa fa-pencil fa-2x" aria-hidden="true"></i></a></td>
+                    <td class="success"><a href="{% url 'aplicacionTurnos.views.eliminarTurno' pk=turno.pk %}"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
+                </tr>
+            {% endfor %}
+          </table>
+        -->
+    {% endblock %}

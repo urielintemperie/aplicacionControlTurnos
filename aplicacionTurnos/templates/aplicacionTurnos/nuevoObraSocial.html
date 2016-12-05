@@ -1,0 +1,44 @@
+{% extends 'aplicacionTurnos/baseABM.html' %}
+{% load widget_tweaks %}
+{% load bootstrap %}
+
+
+<!--cargo el buscador con el href y el placeholder que corresponda -->
+  {% block buscadorHref %}{% url 'aplicacionTurnos.views.busquedaObraSocial' %}{% endblock%}
+  {% block buscadorPlaceHolder %}Buscar Obra Social{% endblock %}
+<!-- fin carga href y placeholder -->
+<!-- cargo el mensaje que ira en aviso cuando se intente borrar y la url para borrar -->
+  {% block borrarConfirmacionMensaje %}Esta seguro que quiere borrar la obra social{% endblock %}
+  {% block borrarConfirmacionHref%}/eliminarObraSocial/{% endblock %}
+<!-- fin carga mensaje y href(url) -->
+
+        {% block ABM %}
+            <h2>Obra Social</h2>
+            <form method="POST">
+              {% csrf_token %}
+              {% form_input form.nombre %}
+              <div class="pull-right">
+                <input type="submit" class="btn btn-success" value="Guardar"/>
+              </div>
+            </form>
+            {% endblock%}
+
+    {% block tablas %}
+        <table class="table table-hover sortable">
+
+          <h1 align=center><font size=5>Obra Social</font></h1>
+        
+        <tr>
+            <th class="warning">Nombre</th>
+            <th class="warning sorttable_nosort">Editar</th>
+            <th class="warning sorttable_nosort">Eliminar</th>
+        </tr>
+        {% for obraSocial in obrasSociales %}
+            </tr>
+                <td class="success">{{obraSocial.nombre}}</td>
+                <td class="success"><a href="{% url 'aplicacionTurnos.views.editarObraSocial' pk=obraSocial.pk %}"><i class="fa fa-pencil fa-2x" aria-hidden="true"></i></a></td>
+                <td class="success"><a href="javascript:borrarConfirmacion({{obraSocial.pk}},'{{obraSocial}}')"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
+            </tr>
+        {% endfor %}
+      </table>
+    {% endblock %}

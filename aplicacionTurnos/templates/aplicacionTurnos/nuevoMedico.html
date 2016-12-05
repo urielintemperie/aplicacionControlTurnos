@@ -1,0 +1,66 @@
+{% extends 'aplicacionTurnos/baseABM.html' %}
+{% load widget_tweaks %}
+{% load bootstrap %}
+
+
+
+<!--cargo el buscador con el href y el placeholder que corresponda -->
+  {% block buscadorHref %}{% url 'aplicacionTurnos.views.busquedaMedico' %}{% endblock%}
+  {% block buscadorPlaceHolder %}Buscar Medico{% endblock %}
+<!-- fin carga href y placeholder -->
+<!-- cargo el mensaje que ira en aviso cuando se intente borrar y la url para borrar -->
+  {% block borrarConfirmacionMensaje %}Esta seguro que quiere borrar el medico{% endblock %}
+  {% block borrarConfirmacionHref%}/eliminarMedico/{% endblock %}
+<!-- fin carga mensaje y href(url) -->
+
+        {% block ABM %}
+            <p>Medico</p>
+            <form method="POST">
+              {% csrf_token %}
+              {% form_input form.nombre %}
+              {% form_input form.apellido %}
+              {% form_input form.dni %}
+              {% form_input form.telefono %}
+              {% form_input form.correo %}
+              {% form_input form.especialidad %}
+              {% form_input form.horario %}
+              <div class="pull-right">
+                <input type="submit" class="btn btn-success" value="Guardar"/>
+              </div>
+            </form>
+            {% endblock%}
+
+    {% block tablas %}
+    <table class="table table-hover sortable">
+      <font size=5><h1 align=center>Medicos</h1></font>
+      <tr>
+        <th class="warning">Nombre</th>
+        <th class="warning">Apellido</th>
+        <th class="warning">Dni</th>
+        <th class="warning">Telefono</th>
+        <th class="warning">Correo</th>
+        <th class="warning">Especialidad</th>
+        <th class="warning">Horario</th>
+        <th class="warning sorttable_nosort">Editar</th>
+        <th class="warning sorttable_nosort">Eliminar</th>
+      </tr>
+      {% for medico in medicos %}
+      <tr>
+          <td class="success">{{medico.nombre}}</td>
+          <td class="success">{{medico.apellido}}</td>
+          <td class="success">{{medico.dni}}</td>
+          <td class="success">{{medico.telefono}}</td>
+          <td class="success">{{medico.correo}}</td>
+          <td class="success">{{medico.especialidad}}</td>
+          <td class="success">
+            {% for horario in medico.horario.all %}
+            {{horario}}
+            <br>
+            {% endfor %}
+          </td>
+          <td class="success"><a href="{% url 'aplicacionTurnos.views.editarMedico' pk=medico.pk %}"><i class="fa fa-pencil fa-2x" aria-hidden="true"></i></a></td>
+          <td class="success"><a href="javascript:borrarConfirmacion({{medico.pk}},'{{medico.nombre}} {{medico.apellido}} | {{medico.especialidad}}')"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
+        </tr>
+      {% endfor %}
+        </table>
+      {% endblock %}

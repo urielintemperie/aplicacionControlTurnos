@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load widget_tweaks %}
+    {% load bootstrap %}
+    <meta charset='utf-8'/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!---Bootstrap and custom styles--->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/footer.css"/>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/header-user-dropdown.css">
+    <link href='http://fonts.googleapis.com/css?family=Cookie|Raleway' rel='stylesheet' type='text/css'>
+    <!---Estilos Calendario--->
+    <link href='../static/css/fullcalendar.css' rel='stylesheet'/>
+    <link href='../static/css/fullcalendar.print.css' rel='stylesheet' media='print'/>
+    <!--Scripts Calendario-->
+
+    <!--<script src="http://code.jquery.com/jquery-latest.js"></script>-->
+    <!--<script src='../static/js/moment.min.js'></script>
+    <script src='../static/js/jquery.min.js'></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>-->
+    <!--<script src='../static/js/fullcalendar.min.js'></script>
+    <script src='../static/js/es.js'></script>-->
+
+
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/moment.min.js'></script>
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery.min.js'></script>
+    <script src="http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery-ui.custom.min.js"></script>
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/fullcalendar.min.js'></script>
+  
+
+<!--
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script src='//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.0.1/fullcalendar.print.css'></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.0.1/fullcalendar.min.css"></script>
+  <script src='//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.0.1/fullcalendar.min.js'></script>
+-->
+    <!---Script librerias externas--->
+    <script src="/static/js/bootstrap.min.js"></script>
+
+    <title>Dental Clinic</title>
+
+    <!---Inicio Script calendario (SACAR)--->
+    <script>
+    $(document).ready(function() {
+      $('#calendarioCalendario').fullCalendar({
+        height: 260,
+        defaultDate: '{{today}}',
+        editable: true,
+        eventLimit: true,
+        dayClick: function(date, jsEvent, view) {
+          window.location.href = 'http://127.0.0.1:8000/cambioDia/' + date.format();
+        }
+      });
+      /*$('#calendarioCalendario').defaultDate.css('background-color', 'green');*/
+    });
+    </script>
+    <!---Fin Script calendario (SACAR)--->
+  </head>
+    <body>
+      <header class="header-user-dropdown">
+        <div class="header-limiter">
+          <h1>Dental<span>Clinic</span></h1>
+          <!-- Buscador Paciente por nombre o apellido o DNI-->
+          <div id="buscadorPaciente">
+            <form class="navbar-form navbar-left" role="search" role="search" action="{% url 'aplicacionTurnos.views.busquedaPaciente' %}" method="GET">
+              <input name="q" value="{{ query|escape }}" type="text" class="form-control" placeholder="Buscar Paciente">
+              <input type="submit" value="Buscar" class="btn btn-default">
+            </form>
+          </div>
+          <!--Fin Buscador Paciente -->
+          <div class="header-user-menu">
+            <img src="/static/imagenes/Doctor.png" alt="User Image"/>
+            <ul>
+              <li><a href="#">Settings</a></li>
+              <li><a href="/logout" class="highlight">Logout</a></li>
+      			</ul>
+      		</div>
+      	</div>
+      </header>
+      <!-- The Modal -->
+      <div id="myModal" class="modal-peligro">
+        <!-- Modal content -->
+        <div id="modal-content" class="modal-content">
+          <div class="modal-header-peligro">
+            <span class="close">x</span>
+            <h2>Atencion</h2>
+          </div>
+          <div class="modal-body">
+            <p id="aviso"></p>
+            <a href="" id="borrarDefinitivo"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
+          </div>
+          <div class="modal-footer-peligro">
+            <br></br>
+            <br></br>
+          </div>
+        </div>
+      </div>
+      <div id="segundoModal" class="modal">
+        <!-- Modal content -->
+        <div id="modal-content2" class="modal-content">
+          <div class="modal-header">
+            <span class="close">x</span>
+            <h2>Nuevo Turno</h2>
+          </div>
+          <div class="modal-body">
+            <form method="POST">
+              {% csrf_token %}
+              {% form_input form.medico %}
+              {% form_input form.paciente %}
+              {% form_input form.horario %}
+              {% form_input form.tratamiento %}
+              {{ form.estado }}
+              {{ form.estaActivo }}
+          <div class="modal-footer">
+            <div class="pull-right">
+              <input type="submit" class="btn btn-success" value="Guardar"/>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- fin modales -->
+
+      <div id='general'>
+        <div id='contenedorPrincipal'>
+          <div id='contenedorPrimarioIzquierda'>
+            <div id='calendario'>
+              <div id='calendarioCalendario'></div>
+            </div>
+            <div id='medicos'>
+              <!-- Selector Arreglar -->
+              <!--<div class="form-group" style="width:120px">
+                <label for="sel1">Medicos</label>
+                <!--<a href="{%url 'aplicacionTurnos.views.cambioDia' dia='%s'  % (today)}">
+                <select class="form-control" id="sel1">
+                  <option>-------</option>
+                  {%for medico in medicos%}
+                    ><option>{{medico}}</option>
+                  {%endfor%}
+                </select>
+              </a>
+            </div>-->
+
+
+            <div class="form-group" style="width:120px">
+                <label for="sel1">Medicos</label>
+
+                <select class="form-control" id="medicosSelect" onchange="location = this.options[this.selectedIndex].value;" selected=''>
+
+                  <option>-------</option>
+
+                  {%for medico in medicos%}
+                  <option value="{% url 'aplicacionTurnos.views.changeDay' dia=today medicopk=medico.pk %}">{{medico}}</option>
+
+                  {%endfor%}
+                </select>
+                <!--</a>-->
+                <div>
+                  {% for medico in medicos %}
+                  {{medico.nombre}} | {{medico.pk}}
+                  {% endfor %}
+                </div>
+                <div id="demo">{{today}}</div>
+            </div>
+
+          </div>
+        </div>
+        <div id='dia'>
+          <div id='tablaArriba'>
+            <table class="table table-hover">
+              <font size=5><p align=center>Turnos {{today}}</p></font>
+              <tr>
+                <th class="warning">Medico</th>
+                <th class="warning">Paciente</th>
+                <th class="warning">Horario</th>
+                <th class="warning">Tratamiento</th>
+                <th class="warning">Estado</th>
+                <th class="warning">Editar</th>
+                <th class="warning">Borrar</th>
+              </tr>
+            </table>
+          </div>
+
+            <div id='tablaAbajo' style="border-collapse: collapse; white-space: nowrap;">
+              {% for turno in turnos %}
+              <table class="table table-hover">
+              <tr class="{{turno.estado}}">
+                  <td>{{turno.medico.nombre}} {{turno.medico.apellido}}</td>
+                  <td>{{turno.paciente.nombre}} {{turno.paciente.apellido}}</td>
+                  <td>{{turno.horario.horaInicio}}</td>
+                  <td>{{turno.tratamiento.nombre}}</td>
+                  <td>{{turno.estado}}</td>
+                  <td><a href="#" onClick="MyWindow=window.open('{% url 'aplicacionTurnos.views.editarTurno' pk=turno.pk %}','MyWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=300,height=300,left=250,top=50'); return false;"><i class="fa fa-pencil fa-2x" aria-hidden="true"></i></a></td>
+                  <td><a href="javascript:borrarConfirmacion({{turno.pk}},'{{turno.paciente}}')"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
+                </tr>
+              </table>
+              {% endfor %}
+            </div>
+
+          </div>
+        </div>
+
+        <div id="contenedorSecundario">
+          <!--Boton Para Nuevo Medico y Tabla de Medicos-->
+           <div class="col-sm-3 what-we-do-box">
+             <div class="what-we-do-box-icon">
+               <a class="btn btn-ttc" href="{%url 'aplicacionTurnos.views.nuevoMedico'%}">
+                 <i class="fa fa-user-md fa-4x"></i></a></div>
+                <h3>Medico</h3>
+                <p>Agregar y Administrar Medicos</p>
+             </div>
+             <!--Boton para Nuevo Paciente y Tabla de Pacientes-->
+             <div class="col-sm-3 what-we-do-box">
+             <div class="what-we-do-box-icon">
+               <a class="btn btn-ttc" href="{% url 'aplicacionTurnos.views.nuevoPaciente' %}">
+                 <i class="fa fa-user fa-4x"></i></a></div>
+                 <h3>Paciente</h3>
+                 <p>Agregar y Administrar Pacientes</p>
+             </div>
+             <!--Boton para nuevo turno-->
+             <div class="col-sm-3 what-we-do-box">
+             <div class="what-we-do-box-icon">
+               <!-- saque de href aplicacion . views - nuevoTurno -->
+               <a class="btn btn-ttc" href="javascript:nuevoTurno()">
+                 <i class="fa fa-plus-square fa-4x"></i></a></div>
+                 <h3>Nuevo Turno</h3>
+                 <p>Agregar y Administrar Turnos</p>
+             </div>
+             <!--Boton para Auxiliares-->
+             <div class="col-sm-3 what-we-do-box">
+             <div class="what-we-do-box-icon">
+               <div class="btn-group btn-ttc ">
+                 <button type="button" class="btn dropup-toggle boton-trans" data-toggle="dropdown">
+                   <i class="fa fa-list-alt fa-4x"></i></a>
+                   <span class="caret"></span>
+                 </button>
+                 <ul class="dropdown-menu">
+                   <li><a href="{%url 'aplicacionTurnos.views.nuevoObraSocial'%}">Obra Social</a></li>
+                   <li><a href="{%url 'aplicacionTurnos.views.nuevoTratamiento'%}">Tratamiento</a></li>
+                   <li><a href="{%url 'aplicacionTurnos.views.nuevoEspecialidad'%}">Especialidad</a></li>
+                 </ul>
+               </div>
+             </div>
+             <h3>Auxiliares</h3>
+             <p>Crear  y Administrar Obra Social, Tratamientos y Especialidad</p>
+           </div>
+        </div>
+      </div>
+    </body>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById('myModal');
+
+        var modal2 = document.getElementById("segundoModal");
+
+        //consigo modal-content
+        var modalContent = document.getElementById('modal-content');
+
+        var modalContent2 = document.getElementById("modal-content2");
+
+        // Get the button that opens the modal
+        //var btn = document.getElementById("myBtn");
+
+        //var boton2 = document.getElementById("boton2");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        var cerrar = document.getElementsByClassName("close")[1];
+
+        var borrarDefinitivo = document.getElementById("borrarDefinitivo");
+        var aviso = document.getElementById("aviso");
+
+
+        // When the user clicks the button, open the modal
+        /*btn.onclick = function() {
+            modalContent.style.marginTop = "auto";
+            modalContent.style.animationName = "animacionEntradaBajar";
+            modal.style.display = "block";
+
+        }*/
+
+        /*btn.onclick = function() {
+          aparecer (modal, modalContent);
+        }*/
+
+        function borrarConfirmacion (pk, paciente) {
+          aviso.innerHTML = "¿Esta seguro que quiere borrar el turno de " + paciente + "?";
+          /*borrarDefinitivo.href = "/eliminarTurno/" + pk + "/";*/
+          borrarDefinitivo.href = "/eliminarTurno/" + pk + "/";
+          aparecer (modal,modalContent);
+        }
+
+        /*boton2.onclick = function() {
+          modalContent2.style.marginTop = "auto";
+          modalContent2.style.animationName = "animacionEntradaBajar";
+          modal2.style.display = "block";
+        }*/
+
+        /*boton2.onclick = function () {
+            aparecer (modal2, modalContent2);
+        }*/
+
+        function nuevoTurno () {
+          aparecer (modal2, modalContent2);
+        }
+
+
+        function aparecer(modalGeneral, modalContenido) {
+          modalContenido.style.marginTop = "auto";
+          modalContenido.style.animationName = "animacionEntradaBajar";
+          modalGeneral.style.display = "block";
+        }
+
+        /*span.onclick = function() {
+            modalContent.style.marginTop = "-410px";
+            modalContent.addEventListener("animationend",desaparecer);
+            modalContent.style.animationName = "animacionSalidaSubir";
+        }*/
+
+        /*span.onclick = function () {
+          close (modalContent, desaparecer);
+        }*/
+
+        span.onclick = function () {
+          close (modal, modalContent);
+        }
+
+        /*cerrar.onclick = function() {
+          modalContent2.style.marginTop = "-410px";
+          modalContent2.addEventListener("animationend",desaparecer2);
+          modalContent2.style.animationName = "animacionSalidaSubir";
+        }*/
+
+        /*cerrar.onclick = function() {
+          close (modalContent2,desaparecer2);
+        }*/
+
+        cerrar.onclick = function() {
+          close (modal2, modalContent2);
+        }
+
+        var general;
+        var contenido;
+
+        function close(modalGeneral, modalContenido){
+          modalContenido.style.marginTop = "-410px";
+          /*modalContenido.addEventListener("animationend",ida);*/
+          general = modalGeneral;
+          contenido = modalContenido;
+          /*modalContenido.addEventListener("animationend",function() { desaparecer(modalGeneral, modalContenido); });*/
+          modalContenido.addEventListener("animationend",desaparecer);
+          modalContenido.style.animationName = "animacionSalidaSubir";
+        }
+
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+              close(modal, modalContent);
+                /*modalContent.style.marginTop = "-410px";
+                modalContent.addEventListener("animationend",desaparecer);
+                modalContent.style.animationName = "animacionSalidaSubir";*/
+                //modal.style.display = "none";
+                //modal.style.animationName = "";
+            } else if (event.target == modal2) {
+                close(modal2,modalContent2);
+              /*modalContent2.style.marginTop = "-410px";
+              modalContent2.addEventListener("animationend",desaparecer2);
+              modalContent2.style.animationName = "animacionSalidaSubir";*/
+            }
+        }
+
+        /*function desaparecer (){
+            modal.style.display = "none";
+            modalContent.removeEventListener("animationend",desaparecer);
+        }*/
+
+        /*function desaparecer2 (){
+          modal2.style.display = "none";
+          modalContent2.removeEventListener("animationend",desaparecer2);
+        }*/
+
+
+        /*function desaparecer (modalGeneral, modalContenido){
+            modalGeneral.style.display = "none";
+            modalContenido.removeEventListener("animationend",function() { desaparecer(modalGeneral, modalContenido); });
+        }*/
+
+        function desaparecer (){
+            general.style.display = "none";
+            contenido.removeEventListener("animationend", desaparecer);
+        }
+
+
+    </script>
+
+</html>

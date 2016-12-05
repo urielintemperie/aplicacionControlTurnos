@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!---Bootstrap and custom styles--->
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/footer.css"/>
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/static/css/header-user-dropdown.css">
+  <link href='http://fonts.googleapis.com/css?family=Cookie|Raleway' rel='stylesheet' type='text/css'>
+  <!---Estilos Calendario--->
+  <link href='../static/css/fullcalendar.css' rel='stylesheet'/>
+  <link href='../static/css/fullcalendar.print.css' rel='stylesheet' media='print'/>
+  <!--Scripts Calendario-->
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script src='../static/js/moment.min.js'></script>
+  <script src='../static/js/jquery.min.js'></script>
+  <script src='../static/js/fullcalendar.min.js'></script>
+  <script src='../static/js/es.js'></script>
+  <!---Script librerias externas--->
+  <script src="/static/js/bootstrap.min.js"></script>
+
+<!-- Script reordenar tablas -->
+<!-- http://www.kryogenix.org/code/browser/sorttable/ -->
+  <script src="../../static/js/sorttable.js"></script>
+
+
+</head>
+
+  <body>
+    <header class="header-user-dropdown">
+
+      <div class="header-limiter">
+        <h1>Dental<span>Clinic</span></h1>
+
+        <!-- Buscador Paciente por nombre o apellido o DNI-->
+        <div id="buscadorPaciente">
+          <!--<form class="navbar-form navbar-left" role="search" role="search" action="{% url 'aplicacionTurnos.views.busquedaPaciente' %}" method="GET">-->
+          <form class="navbar-form navbar-left" role="search" role="search" action="{% block buscadorHref %}{%endblock%}" method="GET">
+            <!--<input name="q" value="{{ query|escape }}" type="text" class="form-control" placeholder="Buscar Paciente">-->
+            <input name="q" value="{{ query|escape }}" type="text" class="form-control" placeholder="{%block buscadorPlaceHolder%}{%endblock%}">
+            <input type="submit" value="Buscar" class="btn btn-default">
+          </form>
+        </div>
+        <!--Fin Buscador Paciente -->
+
+        <div class="header-user-menu">
+          <img src="/static/imagenes/Doctor.png" alt="User Image"/>
+
+          <ul>
+            <li><a href="#">Settings</a></li>
+            <li><a href="/logout" class="highlight">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+
+    <!-- Modal Peligro Borrar-->
+    <div id="myModal" class="modal-peligro">
+
+        <!-- Modal content -->
+        <div id="modal-content" class="modal-content">
+            <div class="modal-header-peligro">
+                <span class="close">x</span>
+                <h2>Atencion</h2>
+            </div>
+            <div class="modal-body">
+                <p id="aviso"></p>
+                <a href="" id="borrarDefinitivo"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
+
+            </div>
+            <div class="modal-footer-peligro">
+                <h3>Modal Footer</h3>
+            </div>
+        </div>
+
+    </div>
+    <!-- Fin Modal Peligro Borrar-->
+
+    <div id='general'>
+      <div id='contenedorPrincipal'>
+        <div id='contenedorPrimarioIzquierda'>
+      {% block ABM %}
+      {% endblock%}
+    </div>
+    <div id='dia'>
+      {% block tablas %}
+      {% endblock%}
+    </div>
+  </div>
+    <div id="contenedorSecundario">
+      <!--Boton Para Home-->
+       <div class="col-sm-3 maru">
+         <div class="what-we-do-box-icon">
+           <a class="btn btn-ttc" href="{%url 'aplicacionTurnos.views.home'%}">
+             <i class="fa fa-home fa-4x"></i></a></div>
+            <h3>Inicio</h3>
+            <p>Pagina de Inicio</p>
+         </div>
+      <!--Boton Para Nuevo Medico y Tabla de Medicos-->
+       <div class="col-sm-3 maru">
+         <div class="what-we-do-box-icon">
+           <a class="btn btn-ttc" href="{%url 'aplicacionTurnos.views.nuevoMedico'%}">
+             <i class="fa fa-user-md fa-4x"></i></a></div>
+            <h3>Medico</h3>
+            <p>Crear y administrar Medicos</p>
+         </div>
+         <!--Boton para Nuevo Paciente y Tabla de Pacientes-->
+         <div class="col-sm-3 maru">
+         <div class="what-we-do-box-icon">
+           <a class="btn btn-ttc" href="{% url 'aplicacionTurnos.views.nuevoPaciente' %}">
+             <i class="fa fa-user fa-4x"></i></a></div>
+             <h3>Paciente</h3>
+             <p>Crear y administrar pacientes</p>
+         </div>
+         <!--Boton para Auxiliares-->
+         <div class="col-sm-3 maru">
+         <div class="what-we-do-box-icon">
+           <div class="btn-group btn-ttc ">
+             <button type="button" class="btn dropup-toggle boton-trans" data-toggle="dropdown">
+               <i class="fa fa-list-alt fa-4x"></i></a>
+               <span class="caret"></span>
+             </button>
+             <ul class="dropdown-menu">
+               <li><a href="{%url 'aplicacionTurnos.views.nuevoObraSocial'%}">Obra Social</a></li>
+               <li><a href="{%url 'aplicacionTurnos.views.nuevoTratamiento'%}">Tratamiento</a></li>
+               <li><a href="{%url 'aplicacionTurnos.views.nuevoEspecialidad'%}">Especialidad</a></li>
+             </ul>
+           </div>
+         </div>
+         <h3>Auxiliares</h3>
+         <p>Administrar obra social,</p>
+         <p>tratamientos y especializaciones</p>
+       </div>
+     </div>
+  </body>
+
+
+
+  <script>
+      // Get the modal
+      var modal = document.getElementById('myModal');
+
+      //consigo modal-content
+      var modalContent = document.getElementById('modal-content');
+
+
+      // Get the <span> element that closes the modal
+      var span = document.getElementsByClassName("close")[0];
+
+      var borrarDefinitivo = document.getElementById("borrarDefinitivo");
+      var aviso = document.getElementById("aviso");
+
+
+      function borrarConfirmacion (pk, objeto) {
+        aviso.innerHTML = "¿{%block borrarConfirmacionMensaje%}{%endblock%} " + objeto + "?";
+        borrarDefinitivo.href = "{%block borrarConfirmacionHref%}{%endblock%}" + pk + "/";
+        aparecer (modal,modalContent);
+      }
+
+
+      function aparecer(modalGeneral, modalContenido) {
+        modalContenido.style.marginTop = "auto";
+        modalContenido.style.animationName = "animacionEntradaBajar";
+        modalGeneral.style.display = "block";
+      }
+
+      span.onclick = function () {
+        close (modal, modalContent);
+      }
+
+      var general;
+      var contenido;
+
+      function close(modalGeneral, modalContenido){
+        modalContenido.style.marginTop = "-410px";
+        general = modalGeneral;
+        contenido = modalContenido;
+        modalContenido.addEventListener("animationend",desaparecer);
+        modalContenido.style.animationName = "animacionSalidaSubir";
+      }
+
+
+      window.onclick = function(event) {
+          if (event.target == modal) {
+            close(modal, modalContent);
+          } else if (event.target == modal2) {
+              close(modal2,modalContent2);
+          }
+      }
+
+
+      function desaparecer (){
+          general.style.display = "none";
+          contenido.removeEventListener("animationend", desaparecer);
+      }
+
+
+  </script>
+
+
+</html>

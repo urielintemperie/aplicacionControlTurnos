@@ -1,0 +1,59 @@
+{% extends 'aplicacionTurnos/baseABM.html' %}
+{% load widget_tweaks %}
+{% load bootstrap %}
+
+<!--cargo el buscador con el href y el placeholder que corresponda -->
+  {% block buscadorHref %}{% url 'aplicacionTurnos.views.busquedaPaciente' %}{% endblock%}
+  {% block buscadorPlaceHolder %}Buscar Paciente{% endblock %}
+<!-- fin carga href y placeholder -->
+<!-- cargo el mensaje que ira en aviso cuando se intente borrar y la url para borrar -->
+  {% block borrarConfirmacionMensaje %}Esta seguro que quiere borrar el paciente{% endblock %}
+  {% block borrarConfirmacionHref%}/eliminarPaciente/{% endblock %}
+<!-- fin carga mensaje y href(url) -->
+
+        {% block ABM %}
+            <h2>Paciente</h2>
+            <form method="POST">
+              {% csrf_token %}
+              {% form_input form.nombre %}
+              {% form_input form.apellido %}
+              {% form_input form.dni %}
+              {% form_input form.telefono %}
+              {% form_input form.fechaNacimiento %}
+              {% form_input form.obraSocial %}
+              {% form_input form.numeroObraSocial %}
+              <div class="pull-right">
+                <input type="submit" class="btn btn-success" value="Guardar"/>
+              </div>
+            </form>
+            {% endblock%}
+
+    {% block tablas %}
+        <table class="table table-hover sortable">
+          <font size=5><h1 align=center>Pacientes</h1></font>
+            <tr>
+                <th class="warning">Nombre</th>
+                <th class="warning">Apellido</th>
+                <th class="warning">Dni</th>
+                <th class="warning">Telefono</th>
+                <th class="warning">Fecha Nacimiento</th>
+                <th class="warning">Obra Social</th>
+                <th class="warning">Numero Obra Social</th>
+                <th class="warning sorttable_nosort">Editar</th>
+                <th class="warning sorttable_nosort">Eliminar</th>
+            </tr>
+            {% for paciente in pacientes %}
+                </tr>
+                    <td class="success">{{paciente.nombre}}</td>
+                    <td class="success">{{paciente.apellido}}</td>
+                    <td class="success">{{paciente.dni}}</td>
+                    <td class="success">{{paciente.telefono}}</td>
+                    <td class="success">{{paciente.fechaNacimiento}}</td>
+                    <td class="success">{{paciente.obraSocial}}</td>
+                    <td class="success">{{paciente.numeroObraSocial}}</td>
+                    <td class="success"><a href="{% url 'aplicacionTurnos.views.editarPaciente' pk=paciente.pk %}"><i class="fa fa-pencil fa-2x" aria-hidden="true"></i></a></td>
+                    <td class="success"><a href="javascript:borrarConfirmacion({{paciente.pk}},'{{paciente}}')"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
+                </tr>
+            {% endfor %}
+          </table>
+    {% endblock %}

@@ -5,8 +5,10 @@ from .forms import *
 import datetime
 from .models import *
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 "Pagina Inicio"
+@login_required
 def home(request):
     today=str(datetime.date.today())
     return redirect('/cambioDia/'+today)
@@ -26,6 +28,8 @@ def home(request):
     return render(request, 'aplicacionTurnos/home.html', {'today':today.isoformat(), 'medicos':medicos,'form':form})
     #return render(request, 'aplicacionTurnos/home.html', {'today':today.isoformat(), 'medicos':medicos})
 '''
+
+@login_required
 def dobleForm(request):
     '''if request.method == 'POST':
         form = turnoForm(request.POST)
@@ -70,6 +74,7 @@ def dobleForm(request):
         '''
     return render(request, 'aplicacionTurnos/dobleForm.html', {'formObraSocial': formObraSocial, 'formPaciente':formPaciente})
 
+@login_required
 def dobleFormTurno(request):
     if request.method == 'POST':
         formTurno = turnoForm(request.POST, prefix="t")
@@ -96,8 +101,8 @@ def dobleFormTurno(request):
         formHorario = horarioTurnoForm(prefix="h")
     return render(request, 'aplicacionTurnos/dobleFormTurno.html', {'formTurno': formTurno, 'formHorario':formHorario})
 
+@login_required
 def cambioDia(request, dia):
-
     if request.method == 'POST':
         form = turnoForm(request.POST)
         if form.is_valid():
@@ -113,6 +118,7 @@ def cambioDia(request, dia):
 
 
 #changeDay filtra tambien por medico, falta reparar calendario
+@login_required
 def changeDay(request, dia, medicopk):
     if request.method == 'POST':
         form = turnoForm(request.POST)
@@ -144,6 +150,7 @@ def cambioDia(request, dia, medicopk):
 '''
 
 "ABM Paciente"
+@login_required
 def nuevoPaciente(request):
     pacientes = Paciente.objects.filter(estaActivo = True).order_by('apellido')
     if request.method == 'POST':
@@ -157,7 +164,7 @@ def nuevoPaciente(request):
         form = pacienteForm()
     return render(request, 'aplicacionTurnos/nuevoPaciente.html', {'form': form, 'pacientes':pacientes})
 
-
+@login_required
 def editarPaciente(request, pk):
     paciente = Paciente.objects.get(pk=pk)
     if request.method == 'POST':
@@ -169,6 +176,7 @@ def editarPaciente(request, pk):
         form = pacienteForm(instance = paciente)
     return render(request, 'aplicacionTurnos/editarPaciente.html',{'form':form})
 
+@login_required
 def eliminarPaciente(request , pk):
     paciente = Paciente.objects.get(pk=pk)
     paciente.estaActivo = False
@@ -176,6 +184,7 @@ def eliminarPaciente(request , pk):
     return redirect ('aplicacionTurnos.views.nuevoPaciente')
 
 "ABM Medico"
+@login_required
 def nuevoMedico(request):
     medicos = Medico.objects.filter(estaActivo = True).order_by('apellido')
     if request.method == 'POST':
@@ -189,6 +198,7 @@ def nuevoMedico(request):
         form = medicoForm()
     return render(request, 'aplicacionTurnos/nuevoMedico.html',{'form':form, 'medicos':medicos})
 
+@login_required
 def editarMedico(request, pk):
     medico = Medico.objects.get(pk=pk)
     if request.method == 'POST':
@@ -203,6 +213,7 @@ def editarMedico(request, pk):
         form = medicoForm(instance = medico)
     return render(request, 'aplicacionTurnos/editarMedico.html',{'form':form})
 
+@login_required
 def eliminarMedico(request , pk):
     medico = Medico.objects.get(pk=pk)
     medico.estaActivo = False
@@ -210,6 +221,7 @@ def eliminarMedico(request , pk):
     return redirect ('aplicacionTurnos.views.nuevoMedico')
 
 "ABM Tratamiento"
+@login_required
 def nuevoTratamiento(request):
     tratamientos = Tratamiento.objects.all().order_by('nombre')
     if request.method == 'POST':
@@ -221,6 +233,7 @@ def nuevoTratamiento(request):
         form = tratamientoForm()
     return render(request, 'aplicacionTurnos/nuevoTratamiento.html',{'form':form, 'tratamientos':tratamientos})
 
+@login_required
 def editarTratamiento(request, pk):
     tratamiento = Tratamiento.objects.get(pk=pk)
     if request.method == 'POST':
@@ -235,12 +248,13 @@ def editarTratamiento(request, pk):
         form = tratamientoForm(instance = tratamiento)
     return render(request, 'aplicacionTurnos/editarTratamiento.html',{'form':form})
 
+@login_required
 def eliminarTratamiento(request , pk):
     Tratamiento.objects.filter(pk=pk).delete()
     return redirect ('aplicacionTurnos.views.nuevoTratamiento')
 
 "ABM obraSocial"
-
+@login_required
 def nuevoObraSocial(request):
     obrasSociales = ObraSocial.objects.all().order_by('nombre')
     if request.method == 'POST':
@@ -252,6 +266,7 @@ def nuevoObraSocial(request):
         form = obraSocialForm()
     return render(request, 'aplicacionTurnos/nuevoObraSocial.html',{'form':form, 'obrasSociales':obrasSociales})
 
+@login_required
 def editarObraSocial(request, pk):
     obraSocial = ObraSocial.objects.get(pk=pk)
     if request.method == 'POST':
@@ -272,12 +287,14 @@ def editarObraSocial(request, pk):
         form = obraSocialForm(instance = obraSocial)
     return render(request, 'aplicacionTurnos/editarObraSocial.html',{'form':form})
 
+@login_required
 def eliminarObraSocial(request , pk):
     ObraSocial.objects.filter(pk=pk).delete()
     return redirect ('aplicacionTurnos.views.nuevoObraSocial')
 
 "ABM Especialidad"
 
+@login_required
 def nuevoEspecialidad(request):
     especialidades = Especialidad.objects.all().order_by('nombre')
     if request.method == 'POST':
@@ -289,6 +306,7 @@ def nuevoEspecialidad(request):
         form = especialidadForm()
     return render(request, 'aplicacionTurnos/nuevoEspecialidad.html',{'form':form, 'especialidades':especialidades})
 
+@login_required
 def editarEspecialidad(request, pk):
     especialidad = Especialidad.objects.get(pk=pk)
     if request.method == 'POST':
@@ -309,11 +327,13 @@ def editarEspecialidad(request, pk):
         form = especialidadForm(instance = especialidad)
     return render(request, 'aplicacionTurnos/editarEspecialidad.html',{'form':form})
 
+@login_required
 def eliminarEspecialidad(request , pk):
     Especialidad.objects.filter(pk=pk).delete()
     return redirect ('aplicacionTurnos.views.nuevoEspecialidad')
 
 "AMB Turno"
+@login_required
 def nuevoTurno(request):
     turnos = Turno.objects.filter(estaActivo = True).order_by('horario')
     if request.method == 'POST':
@@ -326,7 +346,7 @@ def nuevoTurno(request):
     return redirect('/')
     #return render(request, 'aplicacionTurnos/nuevoTurno.html', {'form': form, 'turnos':turnos})
 
-
+@login_required
 def editarTurno(request, pk):
     Turno.objects.filter(estaActivo=True).exists()
     turno = Turno.objects.get(pk=pk)
@@ -350,6 +370,7 @@ def editarTurno(request, pk):
     #return render(request, 'aplicacionTurnos/editarTurno.html',{'form':form})
     return render(request, 'aplicacionTurnos/editarTurnoPopUp.html',{'form':form})
 
+@login_required
 def eliminarTurno(request , pk):
     turno = Turno.objects.get(pk=pk)
     diaTurno = str(turno.horario.dia)
@@ -381,6 +402,7 @@ def logout_view(request):
     logout(request)
     return redirect('/login')
 
+@login_required
 def busquedaPaciente(request):
     #pacientes = Paciente.objects.order_by('apellido')
     query = request.GET.get('q','')
@@ -405,6 +427,7 @@ def busquedaPaciente(request):
         form = pacienteForm()
     return render(request, 'aplicacionTurnos/nuevoPaciente.html', {'form': form, 'pacientes':results})
 
+@login_required
 def busquedaMedico(request):
     #pacientes = Paciente.objects.order_by('apellido')
     query = request.GET.get('q','')
@@ -430,6 +453,7 @@ def busquedaMedico(request):
         form = medicoForm()
     return render(request, 'aplicacionTurnos/nuevoMedico.html',{'form':form, 'medicos':results})
 
+@login_required
 def busquedaEspecialidad(request):
     #pacientes = Paciente.objects.order_by('apellido')
     query = request.GET.get('q','')
@@ -450,6 +474,7 @@ def busquedaEspecialidad(request):
         form = especialidadForm()
     return render(request, 'aplicacionTurnos/nuevoEspecialidad.html',{'form':form, 'especialidades':results})
 
+@login_required
 def busquedaTratamiento(request):
     #pacientes = Paciente.objects.order_by('apellido')
     query = request.GET.get('q','')
@@ -470,6 +495,7 @@ def busquedaTratamiento(request):
         form = tratamientoForm()
     return render(request, 'aplicacionTurnos/nuevoTratamiento.html',{'form':form, 'tratamientos':results})
 
+@login_required
 def busquedaObraSocial(request):
     #pacientes = Paciente.objects.order_by('apellido')
     query = request.GET.get('q','')

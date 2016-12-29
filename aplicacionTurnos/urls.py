@@ -36,4 +36,6 @@ urlpatterns = [
     url(r'^busquedaEspecialidad/$', views.busquedaEspecialidad),
     url(r'^busquedaTratamiento/$', views.busquedaTratamiento),
     url(r'^busquedaObraSocial/$', views.busquedaObraSocial),
+    url(r'^dobleForm/$', views.dobleForm),
+    url(r'^dobleFormTurno/$', views.dobleFormTurno),
 ]

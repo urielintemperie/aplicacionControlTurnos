@@ -82,6 +82,7 @@ class Medico(models.Model):
     especialidad = models.ForeignKey('Especialidad')
     horario = models.ManyToManyField('HorarioTrabajo')
     estaActivo = models.BooleanField(default=True)
+    #duracionMinimaTurno
 
     def __str__ (self):
         return self.nombre+' '+self.apellido+' | '+str(self.especialidad) + ' | ' + str(self.estaActivo) + ' | creado: ' + str(self.created.date()) + ' / ' + str(self.created.time().strftime("%H:%M:%S")) + ' | actualizado: ' + str(self.updated.date()) + ' / ' + str(self.updated.time().strftime("%H:%M:%S"))

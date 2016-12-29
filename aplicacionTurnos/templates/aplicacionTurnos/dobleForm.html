@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!---Bootstrap and custom styles--->
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/footer.css"/>
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/static/css/header-user-dropdown.css">
+  <link href='http://fonts.googleapis.com/css?family=Cookie|Raleway' rel='stylesheet' type='text/css'>
+  <!---Estilos Calendario--->
+  <link href='../static/css/fullcalendar.css' rel='stylesheet'/>
+  <link href='../static/css/fullcalendar.print.css' rel='stylesheet' media='print'/>
+  <!--Scripts Calendario-->
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script src='../static/js/moment.min.js'></script>
+  <script src='../static/js/jquery.min.js'></script>
+  <script src='../static/js/fullcalendar.min.js'></script>
+  <script src='../static/js/es.js'></script>
+  <!---Script librerias externas--->
+  <script src="/static/js/bootstrap.min.js"></script>
+
+<!-- Script reordenar tablas -->
+<!-- http://www.kryogenix.org/code/browser/sorttable/ -->
+  <script src="../../static/js/sorttable.js"></script>
+
+
+</head>
+
+  <body>
+    <header class="header-user-dropdown">
+
+      <div class="header-limiter">
+        <h1>Dental<span>Clinic</span></h1>
+      </div>
+    </header>
+
+
+    <div id='general'>
+
+      <div id='contenedorPrincipal'>
+
+        <div id='contenedorPrimarioIzquierda'>
+            <!--
+            <div style="background-color: red">
+                <h2>Nueva Obra Social</h2>
+                <form method="POST" class="post-form">{% csrf_token %}
+                    {{ form.as_p}}
+                    <button onclick="submitForms()" type="submit" name="guardar" class="save btn btn-default">Guardar</button>
+                </form>
+            </div>
+            <div style="background-color: deepskyblue">
+                <h2>Nuevo Paciente</h2>
+                <form method="POST" class="post-form">{% csrf_token %}
+                    {{ formPaciente.as_p}}
+                    <button onclick="submitForms()" type="submit" name="guardar" class="save btn btn-default">Guardar</button>
+                </form>-->
+                <form method="POST" class="post-form">{% csrf_token %}
+                    <h2>Obra Social</h2>
+                    {{ formObraSocial.as_p}}
+                    <h2>Paciente</h2>
+                    {{ formPaciente.as_p }}
+                    <button type="submit" name="guardar" class="save btn btn-default">Guardar</button>
+                </form>
+                <!--<button onclick="submitForms()" type="submit" name="guardar" class="save btn btn-default">Guardar</button>-->
+            </div>
+        </div>
+
+      </div>
+
+    </div>
+  
+
+  </body>
+
+
+
+  <script>  
+    
+    /*var botonGuardar = Document.getElementByName('Guardar')[0];
+
+    botonGuardar.onclick = refreshParent;
+
+    /*window.onunload = refreshParent;*/
+    function submitForms() {
+        document.getElementsByClassName("post-form")[0].submit();
+        document.getElementsByClassName("post-form")[1].submit();
+    }
+
+  </script>
+
+</html>

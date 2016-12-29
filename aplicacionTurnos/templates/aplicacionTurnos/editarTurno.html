@@ -1,6 +1,10 @@
 {% extends 'aplicacionTurnos/baseABM.html' %}
 
     {% block ABM %}
+
+    <!-- ESTE HTML NO SE USA NUNCA -->
+
+    <!-- REMPLAZADO POR editarTurnoPopUp.html -->
         <h2>Nuevo Turno</h2>
         <form method="POST" class="post-form">{% csrf_token %}
             {{ form.as_p}}

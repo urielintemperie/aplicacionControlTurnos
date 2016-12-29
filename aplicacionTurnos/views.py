@@ -26,6 +26,75 @@ def home(request):
     return render(request, 'aplicacionTurnos/home.html', {'today':today.isoformat(), 'medicos':medicos,'form':form})
     #return render(request, 'aplicacionTurnos/home.html', {'today':today.isoformat(), 'medicos':medicos})
 '''
+def dobleForm(request):
+    '''if request.method == 'POST':
+        form = turnoForm(request.POST)
+        if form.is_valid():
+            turno = form.save(commit=True)
+            #return redirect('/nuevoTurno')
+            #return redirect('/cambioDia/'+str(turno.horario.dia))
+    else:
+        form = turnoForm()'''
+    if request.method == 'POST':
+        formPaciente = pacienteForm(request.POST, prefix="p")
+        formObraSocial = obraSocialForm(request.POST, prefix="os")
+
+        if formPaciente.is_valid() and formObraSocial.is_valid():
+            paciente = formPaciente.save(commit=False)
+            paciente.estaActivo = True
+            paciente.obraSocial = formObraSocial.save()
+            paciente.save()
+            return redirect('/nuevoPaciente')
+    else:
+        formPaciente = pacienteForm(prefix="p")
+        formObraSocial = obraSocialForm(prefix="os")
+        '''
+    if request.method == 'POST':
+
+        form = obraSocialForm(request.POST, prefix="os")
+        if form.is_valid():
+            obraSocial = form.save(commit=True)
+            #return redirect('/nuevoObraSocial')
+    else:
+        form = obraSocialForm(prefix="os")
+    if request.method == 'POST':
+        formPaciente = pacienteForm(request.POST, prefix="p")
+        if formPaciente.is_valid():
+            paciente = formPaciente.save(commit=True)
+            paciente.estaActivo = True
+            paciente.obraSocial = obraSocial
+            paciente.save()
+            #return redirect('/nuevoPaciente')
+    else:
+        formPaciente = pacienteForm(prefix="p")
+        '''
+    return render(request, 'aplicacionTurnos/dobleForm.html', {'formObraSocial': formObraSocial, 'formPaciente':formPaciente})
+
+def dobleFormTurno(request):
+    if request.method == 'POST':
+        formTurno = turnoForm(request.POST, prefix="t")
+        formHorario = horarioTurnoForm(request.POST, prefix="h")
+        print(formTurno.data['t-medico'])
+        if formTurno.is_valid() and formHorario.is_valid():
+            turno = formTurno.save(commit=False)
+            turno.horario = formHorario.save()
+            turno.save()
+            return redirect('/')
+        '''
+        if formTurno.is_valid():
+            print(formTurno.data['t-medico'])
+            idMedico=formTurno.data['t-medico']
+            formHorario = horarioTurnoForm(medico_id=idMedico,request.POST, prefix="h")
+            if formHorario.is_valid():
+                turno = formTurno.save(commit=False)
+                turno.horario = formHorario.save()
+                turno.save()
+                return redirect('/')
+        '''
+    else:
+        formTurno = turnoForm(prefix="t")
+        formHorario = horarioTurnoForm(prefix="h")
+    return render(request, 'aplicacionTurnos/dobleFormTurno.html', {'formTurno': formTurno, 'formHorario':formHorario})
 
 def cambioDia(request, dia):
 
@@ -43,6 +112,7 @@ def cambioDia(request, dia):
     #return render(request, 'aplicacionTurnos/home.html', {'today':dia})
 
 
+#changeDay filtra tambien por medico, falta reparar calendario
 def changeDay(request, dia, medicopk):
     if request.method == 'POST':
         form = turnoForm(request.POST)
@@ -186,12 +256,18 @@ def editarObraSocial(request, pk):
     obraSocial = ObraSocial.objects.get(pk=pk)
     if request.method == 'POST':
         form = obraSocialForm(request.POST, instance = obraSocial)
+        if form.is_valid():
+            obraSocial = form.save(commit=False)
+            obraSocial.save()
+            return redirect('aplicacionTurnos.views.nuevoObraSocial')
+        '''
         if 'eliminar' in request.POST:
             obraSocial.delete()
             return redirect('/editarObraSocial')
         elif form.is_valid():
             form.save(commit=True)
             return redirect('/editarObraSocial')
+        '''
     else:
         form = obraSocialForm(instance = obraSocial)
     return render(request, 'aplicacionTurnos/editarObraSocial.html',{'form':form})
@@ -217,12 +293,18 @@ def editarEspecialidad(request, pk):
     especialidad = Especialidad.objects.get(pk=pk)
     if request.method == 'POST':
         form = especialidadForm(request.POST, instance = especialidad)
+        if form.is_valid():
+            especialidad = form.save(commit=False)
+            especialidad.save()
+            return redirect('aplicacionTurnos.views.nuevoEspecialidad')
+        '''
         if 'eliminar' in request.POST:
             especialidad.delete()
             return redirect('/editarEspecialidad')
         elif form.is_valid():
             form.save(commit=True)
             return redirect('/editarEspecialidad')
+        '''
     else:
         form = especialidadForm(instance = especialidad)
     return render(request, 'aplicacionTurnos/editarEspecialidad.html',{'form':form})
@@ -246,18 +328,27 @@ def nuevoTurno(request):
 
 
 def editarTurno(request, pk):
+    Turno.objects.filter(estaActivo=True).exists()
     turno = Turno.objects.get(pk=pk)
     if request.method == 'POST':
         form = turnoForm(request.POST, instance = turno)
+        if form.is_valid():
+            turno = form.save(commit=False)
+            turno.save()
+            diaTurno = str(turno.horario.dia)
+            return redirect('/cambioDia/'+diaTurno)
+        '''
         if 'eliminar' in request.POST:
             turno.delete()
             return redirect('/nuevoTurno')
         elif form.is_valid():
             form.save(commit=True)
             return redirect('/nuevoTurno')
+        '''
     else:
         form = turnoForm(instance = turno)
-    return render(request, 'aplicacionTurnos/editarTurno.html',{'form':form})
+    #return render(request, 'aplicacionTurnos/editarTurno.html',{'form':form})
+    return render(request, 'aplicacionTurnos/editarTurnoPopUp.html',{'form':form})
 
 def eliminarTurno(request , pk):
     turno = Turno.objects.get(pk=pk)
